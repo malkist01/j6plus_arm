@@ -13,7 +13,7 @@ GCC_BRANCH="master-kernel-build-2021"
 
 # Setup make Command
 make_fun() {
-	make O=out ARCH=arm
+	make O=out ARCH=arm "${KERNEL_DEFCONFIG}"
 		CROSS_COMPILE=arm-linux-androideabi- "$@"
 }
 
