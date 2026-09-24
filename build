@@ -8,9 +8,6 @@ KERNEL_BRANCH="19.1"
 KERNEL_DEFCONFIG="teletubies_defconfig"
 
 # Prebuilt Clang Toolchain (AOSP)
-CLANG_URL="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-9.0.0_r3/clang-4691093.tar.gz"
-# Prebuilt GCC Utilities (AOSP)
-GCC_x64="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9"
 GCC_x32="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9"
 GCC_BRANCH="master-kernel-build-2021"
 
@@ -34,13 +31,11 @@ mkdir -p "${WORK}"
 cd "${WORK}" || exit 1
 
 # Cloning all the Necessary files
-if [ ! -d clang ]; then mkdir clang && curl -Lsq "${CLANG_URL}" -o clang.tgz && tar -xzf clang.tgz -C clang; fi
-[ ! -d x64 ] && git clone --depth=1 "${GCC_x64}" -b "${GCC_BRANCH}" ./x64
-[ ! -d x32 ] && git clone --depth=1 "${GCC_x32}" -b "${GCC_BRANCH}" ./x32
+if [ ! -d x32 ] && git clone --depth=1 "${GCC_x32}" -b "${GCC_BRANCH}" ./x32
 [ ! -d "${KERNEL}" ] && git clone --depth=1 "${KERNEL_SOURCE}" -b "${KERNEL_BRANCH}" "${KERNEL}"
 
 # Setting Toolchain Path
-PATH="${WORK}/clang/bin:${WORK}/x64/bin:${WORK}/x32/bin:/bin"
+PATH="${WORK}/x32/bin:/bin"
 
 # Enter Kernel root directory
 cd "${KERNEL_SRC}" || exit 1
@@ -50,10 +45,10 @@ cd "${KERNEL_SRC}" || exit 1
   echo "CONFIG_KSU=y" >> ./arch/arm/configs/teletubies_defconfig
 # echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> ./arch/arm/configs/teletubies_defconfig
   echo "CONFIG_KSU_TOOLKIT_SUPPORT=y" >> ./arch/arm/configs/teletubies_defconfig
-  wget https://raw.githubusercontent.com/TheSillyOk/kernel_ls_patches/refs/heads/master/scope-min-hooks-v1.9.patch
+#  wget https://raw.githubusercontent.com/TheSillyOk/kernel_ls_patches/refs/heads/master/scope-min-hooks-v1.9.patch
   patch -p1 < scope-min-hooks-v1.9.patch
-# wget https://raw.githubusercontent.com/TheSillyOk/kernel_ls_patches/refs/heads/master/selinux_stuff.patch
-# patch -p1 < selinux_stuff.patch
+ wget https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/syscall_hook_patches.sh
+  bash selinux_stuff.patch
  curl -LSs https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh | bash -s master
 
 # Start Compiling Kernel
