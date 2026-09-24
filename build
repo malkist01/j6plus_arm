@@ -46,7 +46,7 @@ cd "${KERNEL_SRC}" || exit 1
 # echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> ./arch/arm/configs/teletubies_defconfig
   echo "CONFIG_KSU_TOOLKIT_SUPPORT=y" >> ./arch/arm/configs/teletubies_defconfig
 #  wget https://raw.githubusercontent.com/TheSillyOk/kernel_ls_patches/refs/heads/master/scope-min-hooks-v1.9.patch
-  patch -p1 < scope-min-hooks-v1.9.patch
+#  patch -p1 < scope-min-hooks-v1.9.patch
  wget https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/syscall_hook_patches.sh
   bash selinux_stuff.patch
  curl -LSs https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh | bash -s master
